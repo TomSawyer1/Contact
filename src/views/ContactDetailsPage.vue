@@ -20,17 +20,13 @@
           <ion-text class="item-text">{{ contact.email }}</ion-text>
         </ion-item>
       </ion-list>
-      <div class="ion-padding-top">
-        <ion-button expand="block" :router-link="'/' + contact.id + '/edit'">Modifier</ion-button>
-        <ion-button expand="block" color="danger" @click="deleteContact">Supprimer</ion-button>
-      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
-import { ref, inject, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import {
   IonPage,
   IonHeader,
@@ -39,7 +35,6 @@ import {
   IonContent,
   IonList,
   IonItem,
-  IonButton,
   IonLabel,
   IonText
 } from '@ionic/vue';
@@ -54,40 +49,36 @@ export default {
     IonContent,
     IonList,
     IonItem,
-    IonButton,
     IonLabel,
     IonText
   },
   setup() {
     const route = useRoute();
-    const router = useRouter();
-    const store = inject('store');
     const contact = ref({});
 
-    onMounted(() => {
+    const loadContact = () => {
       const id = route.params.id;
-      const existingContact = store.state.contacts.find(contact => contact.id === Number(id));
+      const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+      const existingContact = contacts.find(contact => contact.id === Number(id));
       if (existingContact) {
         contact.value = { ...existingContact };
       }
+    };
+
+    onMounted(() => {
+      loadContact();
     });
 
-    const deleteContact = () => {
-      store.deleteContact(contact.value.id);
-      router.push('/');
-    };
-
     return {
-      contact,
-      deleteContact,
+      contact
     };
-  },
+  }
 };
 </script>
 
 <style scoped>
 ion-content {
-  --background: #000000;
+  --background: #f4f5f8;
 }
 
 ion-toolbar {
@@ -107,15 +98,5 @@ ion-item {
 
 .item-text {
   color: #666;
-}
-
-ion-button {
-  --background: #3880ff;
-  --border-radius: 8px;
-  font-size: 16px;
-}
-
-.ion-padding-top {
-  padding-top: 20px;
 }
 </style>

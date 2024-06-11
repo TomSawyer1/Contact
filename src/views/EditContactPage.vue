@@ -86,6 +86,7 @@ export default {
       if (index !== -1) {
         contacts[index] = { ...contact.value };
         localStorage.setItem('contacts', JSON.stringify(contacts));
+        window.dispatchEvent(new CustomEvent('contact-updated'));
         router.push('/home');
       }
     };

@@ -72,12 +72,10 @@ export default {
   },
   created() {
     this.fetchContacts();
-  },
-  mounted() {
-    window.addEventListener('storage', this.fetchContacts);
+    window.addEventListener('contact-updated', this.fetchContacts);
   },
   beforeUnmount() {
-    window.removeEventListener('storage', this.fetchContacts);
+    window.removeEventListener('contact-updated', this.fetchContacts);
   }
 };
 </script>
